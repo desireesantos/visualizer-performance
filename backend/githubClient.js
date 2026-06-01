@@ -20,4 +20,32 @@ async function getPullRequests(owner, repo) {
   }
 }
 
-module.exports = { getPullRequests };
+async function getPullRequestDetails(owner, repo, pull_number) {
+  try {
+    const { data } = await octokit.pulls.get({
+      owner,
+      repo,
+      pull_number
+    });
+    return data;
+  } catch (error) {
+    console.error(`Error fetching PR #${pull_number} details:`, error);
+    throw error;
+  }
+}
+
+async function getCommitDetails(owner, repo, commit_sha) {
+  try {
+    const { data } = await octokit.repos.getCommit({
+      owner,
+      repo,
+      ref: commit_sha
+    });
+    return data;
+  } catch (error) {
+    console.error(`Error fetching commit ${commit_sha} details:`, error);
+    throw error;
+  }
+}
+
+module.exports = { getPullRequests, getPullRequestDetails, getCommitDetails };
