@@ -7,6 +7,12 @@ Um dashboard simples e moderno para visualizar a quantidade de commits e Pull Re
 - **JavaScript (ES6+)**
 - **Tailwind CSS** (Estilização)
 - **GitHub REST API**
+- **Node.js** (Backend)
+
+## 🤖 Desenvolvimento Assistido por IA
+Este projeto foi desenvolvido com o auxílio de:
+- **VS Code Copilot Chat**
+- **Ollama** com o modelo **gemma4**
 
 ## 📦 Como usar
 1. Clone este repositório.

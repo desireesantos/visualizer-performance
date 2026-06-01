@@ -40,19 +40,32 @@
         </div>
 
         <!-- Dashboard de Resultados (Oculto inicialmente) -->
-        <div id="results" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="card p-8 rounded-xl text-center transition hover:scale-105">
-                <div class="text-blue-400 text-4xl mb-4"><i class="fa-solid fa-code-commit"></i></div>
-                <h3 class="text-gray-400 uppercase text-sm font-semibold">Total de Commits</h3>
-                <p id="commitCount" class="text-5xl font-bold text-white mt-2">0</p>
+        <div id="results" class="hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-8 rounded-xl text-center transition hover:scale-105">
+                    <div class="text-blue-400 text-4xl mb-4"><i class="fa-solid fa-code-commit"></i></div>
+                    <h3 class="text-gray-400 uppercase text-sm font-semibold">Total de Commits</h3>
+                    <p id="commitCount" class="text-5xl font-bold text-white mt-2">0</p>
+                </div>
+
+                <div class="card p-8 rounded-xl text-center transition hover:scale-105">
+                    <div class="text-green-400 text-4xl mb-4"><i class="fa-solid fa-code-pull-request"></i></div>
+                    <h3 class="text-gray-400 uppercase text-sm font-semibold">Pull Requests</h3>
+                    <p id="prCount" class="text-5xl font-bold text-white mt-2">0</p>
+                </div>
             </div>
 
-            <div class="card p-8 rounded-xl text-center transition hover:scale-105">
-                <div class="text-green-400 text-4xl mb-4"><i class="fa-solid fa-code-pull-request"></i></div>
-                <h3 class="text-gray-400 uppercase text-sm font-semibold">Pull Requests</h3>
-                <p id="prCount" class="text-5xl font-bold text-white mt-2">0</p>
+            <!-- Seção de Detalhes/Atividades -->
+            <div class="card p-6 rounded-xl shadow-lg">
+                <h3 class="text-white text-xl font-bold mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-list"></i> Atividades Recentes
+                </h3>
+                <div id="activitiesList" class="space-y-3 max-h-96 overflow-y-auto pr-2">
+                    <p class="text-gray-500 text-center py-4">Nenhuma atividade encontrada.</p>
+                </div>
             </div>
         </div>
+
 
         <!-- Loader -->
         <div id="loader" class="hidden text-center py-10">
@@ -94,6 +107,10 @@
                 if (commitRes.ok && prRes.ok) {
                     document.getElementById('commitCount').innerText = commitData.total_count;
                     document.getElementById('prCount').innerText = prData.total_count;
+                    
+                    // Renderizar atividades
+                    renderActivities(commitData.items, prData.items);
+                    
                     resultsDiv.classList.remove('hidden');
                 } else {
                     throw new Error(commitData.message || 'Erro ao buscar dados');
@@ -103,8 +120,38 @@
             } finally {
                 loader.classList.add('hidden');
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Analisar Perfil';
+                btn.innerText = 'Analisar Perfil';
             }
+        }
+
+        function renderActivities(commits, prs) {
+            const list = document.getElementById('activitiesList');
+            list.innerHTML = '';
+
+            const allActivities = [
+                ...prs.map(pr => ({ type: 'PR', title: pr.title, id: pr.number, link: pr.html_url, color: 'text-green-400' })),
+                ...commits.map(c => ({ type: 'Commit', title: c.commit.message.split('\\n')[0], id: c.sha, link: c.html_url, color: 'text-blue-400' }))
+            ].sort((a, b) => new Date(b.date || '') - new Date(a.date || ''));
+
+            if (allActivities.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhuma atividade encontrada.</p>';
+                return;
+            }
+
+            allActivities.forEach(act => {
+                const item = document.createElement('div');
+                item.className = 'p-3 rounded bg-gray-800 border border-gray-700 hover:border-gray-500 cursor-pointer transition flex justify-between items-center group';
+                item.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="${act.color} text-xs font-bold uppercase">${act.type}</span>
+                        <span class="text-gray-300 truncate max-w-xs">${act.title}</span>
+                    </div>
+                    <a href="${act.link}" target="_blank" class="text-gray-500 group-hover:text-white transition">
+                        <i class="fa-solid fa-external-link-alt text-xs"></i>
+                    </a>
+                `;
+                list.appendChild(item);
+            });
         }
     </script>
 </body>
