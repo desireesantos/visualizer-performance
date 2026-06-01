@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Stats Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0d1117; color: #c9d1d9; }
+        .card { background-color: #161b22; border: 1px solid #30363d; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="max-w-2xl w-full">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">GitHub Stats</h1>
+            <p class="text-gray-400">Visualize sua produtividade de forma simples</p>
+        </div>
+
+        <!-- Formulário de Entrada -->
+        <div class="card p-6 rounded-xl shadow-lg mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Usuário GitHub</label>
+                    <input type="text" id="username" placeholder="ex: octocat" 
+                           class="w-full p-2 rounded bg-gray-900 border border-gray-700 focus:border-blue-500 outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Personal Access Token</label>
+                    <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxx" 
+                           class="w-full p-2 rounded bg-gray-900 border border-gray-700 focus:border-blue-500 outline-none transition">
+                </div>
+            </div>
+            <button onclick="fetchStats()" id="btnFetch" 
+                    class="w-full mt-6 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-magnifying-glass"></i> Analisar Perfil
+            </button>
+        </div>
+
+        <!-- Dashboard de Resultados (Oculto inicialmente) -->
+        <div id="results" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card p-8 rounded-xl text-center transition hover:scale-105">
+                <div class="text-blue-400 text-4xl mb-4"><i class="fa-solid fa-code-commit"></i></div>
+                <h3 class="text-gray-400 uppercase text-sm font-semibold">Total de Commits</h3>
+                <p id="commitCount" class="text-5xl font-bold text-white mt-2">0</p>
+            </div>
+
+            <div class="card p-8 rounded-xl text-center transition hover:scale-105">
+                <div class="text-green-400 text-4xl mb-4"><i class="fa-solid fa-code-pull-request"></i></div>
+                <h3 class="text-gray-400 uppercase text-sm font-semibold">Pull Requests</h3>
+                <p id="prCount" class="text-5xl font-bold text-white mt-2">0</p>
+            </div>
+        </div>
+
+        <!-- Loader -->
+        <div id="loader" class="hidden text-center py-10">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+            <p class="mt-4 text-gray-400">Buscando dados na API do GitHub...</p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchStats() {
+            const username = document.getElementById('username').value;
+            const token = document.getElementById('token').value;
+            const resultsDiv = document.getElementById('results');
+            const loader = document.getElementById('loader');
+            const btn = document.getElementById('btnFetch');
+
+            if (!username || !token) {
+                alert('Por favor, preencha o usuário e o token!');
+                return;
+            }
+
+            resultsDiv.classList.add('hidden');
+            loader.classList.remove('hidden');
+            btn.disabled = true;
+            btn.innerText = 'Buscando...';
+
+            const headers = {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            };
+
+            try {
+                const commitRes = await fetch(`https://api.github.com/search/commits?q=author:${username}`, { headers });
+                const commitData = await commitRes.json();
+
+                const prRes = await fetch(`https://api.github.com/search/issues?q=author:${username}+type:pr`, { headers });
+                const prData = await prRes.json();
+
+                if (commitRes.ok && prRes.ok) {
+                    document.getElementById('commitCount').innerText = commitData.total_count;
+                    document.getElementById('prCount').innerText = prData.total_count;
+                    resultsDiv.classList.remove('hidden');
+                } else {
+                    throw new Error(commitData.message || 'Erro ao buscar dados');
+                }
+            } catch (error) {
+                alert('Erro: ' + error.message);
+            } finally {
+                loader.classList.add('hidden');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Analisar Perfil';
+            }
+        }
+    </script>
+</body>
+</html>
