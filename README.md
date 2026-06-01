@@ -1,4 +1,9 @@
-# 🚀 Visualizer Performance GitHub
+# 🚀 Visualizer Performance GitHub (Test Update)
+
+## 🤖 Desenvolvimento Assistido por IA
+Este projeto foi desenvolvido com o auxílio de:
+- **VS Code Copilot Chat**
+- **Ollama** com o modelo **gemma4**
 
 Um dashboard simples e moderno para visualizar a quantidade de commits e Pull Requests de um usuário do GitHub utilizando a API REST do GitHub.
 
