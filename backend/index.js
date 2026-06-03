@@ -6,7 +6,7 @@ const { getPullRequests, getPullRequestDetails, getCommitDetails } = require('./
 const app = express();
 // ...existing code...
 app.get('/api/prs', async (req, res) => {
-// ...existing code...
+  // ...existing code...
   }
 });
 
@@ -43,5 +43,8 @@ app.get('/api/commit/:sha', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-// ...existing code...
+  console.log(`Server running on port ${PORT}`);
+});
+
+module.exports = app;
 
