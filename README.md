@@ -1,4 +1,4 @@
-# 🚀 Visualizer Performance GitHub (Test Update)
+# 🚀 Visualizer Performance GitHub
 
 ## 🤖 Desenvolvimento Assistido por IA
 Este projeto foi desenvolvido com o auxílio de:
