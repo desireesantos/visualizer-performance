@@ -1,7 +1,7 @@
 # 🚀 Visualizer Performance GitHub
 
 ## 🤖 Desenvolvimento Assistido por IA
-Este projeto foi desenvolvido com o auxílio de:
+Este projeto foi desenvolvido com o auxílio de
 - **VS Code Copilot Chat**
 - **Ollama** com o modelo **gemma4**
 
