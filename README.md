@@ -7,7 +7,7 @@ Este projeto foi desenvolvido com o auxílio de
 
 Um dashboard simples e moderno para visualizar a quantidade de commits e Pull Requests de um usuário do GitHub utilizando a API REST do GitHub.
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas:
 - **HTML5**
 - **JavaScript (ES6+)**
 - **Tailwind CSS** (Estilização)
@@ -19,7 +19,7 @@ Este projeto foi desenvolvido com o auxílio de:
 - **VS Code Copilot Chat**
 - **Ollama** com o modelo **gemma4**
 
-## 📦 Como usar
+## 📦 Como usar:
 1. Clone este repositório.
 2. Abra o arquivo `index.html` no seu navegador.
 3. Insira seu nome de usuário e seu **Personal Access Token (PAT)** do GitHub.
